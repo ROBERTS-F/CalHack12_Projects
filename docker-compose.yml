@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UID: ${UID-1000}
+        GID: ${GID-1000}
+        USER: ${USER-dev}
+    container_name: mujoco-esp32-dev
+    working_dir: /workspace
+    volumes:
+      - .:/workspace:cached
+      # Optional: X11 socket for Linux GUI (comment out on macOS/Windows)
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    environment:
+      # For Linux GUI with GLFW viewer:
+      - DISPLAY=${DISPLAY}
+      # Choose MuJoCo backend: osmesa (portable headless), glfw (Linux GUI), egl (server GPU)
+      - MUJOCO_GL=${MUJOCO_GL-osmesa}
+      # Avoid matplotlib asking for interactive backend
+      - MPLBACKEND=Agg
+    # Serial device passthrough (works on Linux)
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyACM0:/dev/ttyACM0
+    # Helps with serial perms on Linux; on macOS this section has no effect
+    group_add:
+      - "dialout"
+    stdin_open: true
+    tty: true

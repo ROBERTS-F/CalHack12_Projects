@@ -1,0 +1,26 @@
+# Core scientific stack
+numpy
+scipy
+pandas
+matplotlib
+sympy
+numba
+control                     # control systems toolbox
+
+# Optimization & ML (CPU)
+jax[cpu]
+cvxpy
+
+# MuJoCo + viewers
+mujoco>=3.1.5
+mujoco-python-viewer
+imageio
+
+# Robotics & utils
+pyyaml
+tqdm
+rich
+
+# ESP32 toolchain (PlatformIO pulls GCC etc.)
+platformio
+esptool

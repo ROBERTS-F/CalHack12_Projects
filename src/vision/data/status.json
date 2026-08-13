@@ -1,0 +1,20 @@
+{
+  "startedAt": "2025-10-25T09:39:34.667Z",
+  "http": {
+    "count": 1,
+    "lastBody": {
+      "gripState": "open",
+      "gripStrength": 0,
+      "t": 1761385193276
+    },
+    "lastAt": "2025-10-25T09:39:53.850Z",
+    "lastIP": "127.0.0.1"
+  },
+  "ws": {
+    "connections": 1,
+    "messages": 1607,
+    "lastMessageText": "{\"type\":\"sample\",\"data\":{\"gripState\":\"open\",\"gripStrength\":0.302543044090271,\"t\":1761385364828}}",
+    "lastAt": "2025-10-25T09:42:45.283Z",
+    "lastIP": "127.0.0.1"
+  }
+}
