@@ -1,6 +1,6 @@
-# CalHack12_Projects — Spectacles → SO-ARM100 Teleop
+# CalHack12_Projects — Spectacles → SO-101 Teleop
 
-Teleoperate a physical [LeRobot SO-ARM100](https://github.com/TheRobotStudio/SO-ARM100) robot arm using hand tracking from **Snap Spectacles**. The Lens streams hand pose / pinch data to a small relay server; Python processes on the host machine turn that into inverse-kinematics solutions and Feetech STS3215 serial commands for the real arm. A MuJoCo model of the arm (built from its own CAD) is available as a digital twin for visualization.
+Teleoperate a physical [LeRobot SO-101](https://github.com/TheRobotStudio/SO-ARM100) robot arm using hand tracking from **Snap Spectacles**. The Lens streams hand pose / pinch data to a small relay server; Python processes on the host machine turn that into inverse-kinematics solutions and Feetech STS3215 serial commands for the real arm. A MuJoCo model of the arm (built from its own CAD) is available as a digital twin for visualization.
 
 > Built at CalHacks 12. This README documents the repo as committed — see [Known limitations](#known-limitations--todos) for the gap between the demo and what's fully automated in code.
 
@@ -67,7 +67,7 @@ Dockerfile / docker-compose.yml / .devcontainer/   containerized dev environment
 ## Prerequisites
 
 **Hardware**
-- A LeRobot SO-ARM100 (or SO-101 — see the naming note below) with 6× Feetech STS3215 smart servos, connected over USB serial.
+- A LeRobot SO-101 (the successor to the SO-ARM100 — see the naming note below) with 6× Feetech STS3215 smart servos, connected over USB serial.
 - Snap Spectacles, with a Lens configured to POST/WebSocket hand-tracking + pinch data to this relay (the Lens project itself is not part of this repo).
 
 **Software**
@@ -131,7 +131,7 @@ Solved joint angles come back in DH convention and are converted to the arm's me
 
 - **Arm position isn't polled live yet.** `status.json` currently only carries `gripState`/`gripStrength` — no hand position — and nothing in the repo continuously feeds tracked position into `so100_control.py` the way `control_with_json.py` does for the gripper. Closing this loop would mean extending the relay/status schema with a position sample and adding a poller analogous to `control_with_json.py` that calls the IK solver and streams ticks per update.
 - **Per-joint tick calibration is a placeholder.** `OFFSET_TICKS` in `so100_control.py` is mid-scale (2048) for every joint; replace with each joint's measured zero-position center for accurate absolute positioning.
-- **SO-100 vs. SO-101 naming.** The DH table, mesh model, and code all target the SO-100. If your physical arm is the newer SO-101, double-check link lengths and the 14.45° mechanical offset before trusting IK output.
+- **SO-100 vs. SO-101 naming.** The physical arm this repo targets is the SO-101, but the DH table, mesh model, and code (`so100_ik.py`, `so100_control.py`, `mujoco_models/so_arm100.xml`) all carry over SO-100 naming and geometry from the original build. Double-check link lengths and the 14.45° mechanical offset against your SO-101 before trusting IK output — the two arms share most of their mechanical design but aren't guaranteed identical.
 - **`mujoco_models/so_arm100.xml`** has a typo in one mesh path (`meshea/Camera-Mount-v6.stl` instead of `meshes/`) that will fail to load until fixed.
 - **The digital twin is standalone.** `viewer_web.py` / `so100_xml_test.py` render one fixed demo pose; they aren't wired to `status.json`, IK output, or servo readback.
 - **No auth on the relay.** `saving_json_input.js` binds `0.0.0.0` and, once tunneled with ngrok, accepts unauthenticated requests on `POST /ingest` and the WebSocket. Fine for a private demo; add auth before exposing it more broadly.
